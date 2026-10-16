@@ -997,7 +997,7 @@
 
 
         // ====== KONEKSI GOOGLE SHEETS (Apps Script) ======
-        const API_URL = 'https://script.google.com/macros/s/AKfycbzM7Tk9uaPJ0AD_p28pVDmJJmTNPLP20MzF_47a8Z6bxRizQsxON7rBA9aaR9BDJZrDVA/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyTrsE6zAi8k4CpE_AnSH7RHDXusvIT3qzp3it4d2qjaYFQiljFXw726U80ySL_hwUA_A/exec';
         async function api(action, payload = {}) {
             if (API_URL.startsWith('PASTE')) throw new Error('API_URL belum diisi');
             const auth = state.currentUser ? { username: state.currentUser.username, token: state.currentUser.token } : null;
