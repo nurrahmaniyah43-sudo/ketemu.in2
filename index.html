@@ -1,0 +1,1987 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ketemu.in - Smart Matching, Happy Finding</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Google Fonts: Plus Jakarta Sans for body/headings & Grand Hotel / Pacifico for Filmotype Keynote style title -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Grand+Hotel&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&display=swap" rel="stylesheet">
+    <!-- QRCode.js Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+                        titleFont: ['"Grand Hotel"', 'cursive', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            800: '#1e40af',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #0f172a;
+            background-image: 
+                radial-gradient(at 10% 10%, rgba(37, 99, 235, 0.15) 0px, transparent 50%),
+                radial-gradient(at 90% 90%, rgba(16, 185, 129, 0.1) 0px, transparent 50%),
+                radial-gradient(at 50% 50%, rgba(15, 23, 42, 0.95) 0px, transparent 100%);
+            background-attachment: fixed;
+            color: #f8fafc;
+        }
+
+        .brand-title {
+            font-family: 'Grand Hotel', cursive;
+            font-weight: 400;
+        }
+
+        .glass-sidebar {
+            background: rgba(15, 23, 42, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card {
+            background: rgba(30, 41, 59, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card:hover {
+            border-color: rgba(59, 130, 246, 0.3);
+        }
+
+        .glass-input {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            color: #f8fafc;
+        }
+
+        .glass-input:focus {
+            background: rgba(15, 23, 42, 0.95);
+            border-color: #3b82f6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: rgba(15, 23, 42, 0.5);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: rgba(51, 65, 85, 0.8);
+            border-radius: 9999px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: rgba(71, 85, 105, 1);
+        }
+
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #print-area, #print-area * {
+                visibility: visible;
+            }
+            #print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                color: black !important;
+                background: white !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col md:flex-row overflow-x-hidden text-slate-100 antialiased selection:bg-blue-500 selection:text-white">
+
+    <!-- Sidebar Navigation -->
+    <aside class="w-full md:w-72 glass-sidebar flex flex-col justify-between p-5 z-30 shrink-0 sticky top-0 md:h-screen">
+        <div>
+            <!-- Header Brand & Tagline -->
+            <div class="flex items-center justify-between md:justify-start space-x-3 mb-6 pb-4 border-b border-slate-800">
+                <div class="flex items-center space-x-3">
+                    <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-500 flex items-center justify-center shadow-lg shadow-blue-500/30 text-white transform hover:rotate-6 transition-transform">
+                        <i class="fa-solid fa-magnifying-glass-location text-xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="brand-title text-3xl tracking-wide text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-indigo-300 to-emerald-300 drop-shadow-sm leading-none">
+                            Ketemu.in
+                        </h1>
+                        <p class="text-[10px] tracking-wider text-slate-400 font-semibold uppercase mt-0.5">
+                            smart matching, happy finding
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Mobile Menu Toggle Button -->
+                <button onclick="toggleMobileNav()" class="md:hidden text-slate-300 hover:text-white p-2 text-xl focus:outline-none">
+                    <i id="mobile-menu-icon" class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+
+            <!-- Role Indicator Switcher Bar (Demo helper) -->
+            <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800/80 mb-6 text-xs space-y-1.5">
+                <div class="flex items-center justify-between text-[11px] text-slate-400 font-medium">
+                    <span>Mode Pengguna:</span>
+                    <span id="current-role-badge" class="px-2 py-0.5 rounded-full font-bold bg-slate-800 text-blue-400 border border-blue-500/30">
+                        Tamu
+                    </span>
+                </div>
+                <div class="text-[10px] text-slate-400 leading-tight">
+                    <span id="role-description">Akses publik standar tanpa login.</span>
+                </div>
+            </div>
+
+            <!-- Dynamic Navigation Links -->
+            <nav id="nav-container" class="space-y-1.5 hidden md:block">
+                <!-- Javascript will dynamically inject options according to the selected role -->
+            </nav>
+        </div>
+
+        <!-- Sidebar Footer -->
+        <div class="hidden md:block pt-4 border-t border-slate-800/80 text-[11px] text-slate-500 text-center space-y-1">
+            <p class="font-semibold text-slate-400">Ketemu.in Platform &copy; 2026</p>
+            <p>Sistem Pencari & Pelapor Barang Hilang Cerdas</p>
+        </div>
+    </aside>
+
+    <!-- Main Content Canvas -->
+    <main class="flex-1 p-4 md:p-8 overflow-y-auto custom-scrollbar relative min-h-screen">
+        
+        <!-- Top App Bar / User Welcome Banner -->
+        <header class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 bg-slate-900/40 p-4 rounded-2xl border border-slate-800/60 backdrop-blur-md">
+            <div>
+                <h2 id="page-heading-title" class="text-2xl md:text-3xl font-extrabold tracking-tight text-white flex items-center space-x-3">
+                    <span>Beranda Utama</span>
+                </h2>
+                <p id="page-heading-sub" class="text-xs sm:text-sm text-slate-400 mt-1">
+                    Platform pencocokan pintar barang hilang dan barang temuan di sekitar Anda.
+                </p>
+            </div>
+
+            <!-- User Quick Action Profile Pill -->
+            <div id="top-user-pill" class="flex items-center space-x-3 self-end sm:self-auto">
+                <!-- Dynamically rendered -->
+            </div>
+        </header>
+
+        <!-- ======================================================== -->
+        <!-- SECTION 1: MENU UTAMA / PUBLIC (GUEST) VIEWS             -->
+        <!-- ======================================================== -->
+
+        <!-- VIEW 1: BERANDA -->
+        <section id="view-beranda" class="tab-view space-y-6">
+            <!-- Hero Banner -->
+            <div class="relative rounded-3xl overflow-hidden p-6 sm:p-10 border border-blue-500/20 bg-gradient-to-r from-blue-900/50 via-slate-900/80 to-indigo-950/60 shadow-2xl">
+                <div class="relative z-10 max-w-2xl space-y-4">
+                    <span class="px-3 py-1 rounded-full text-xs font-semibold bg-blue-500/20 text-blue-300 border border-blue-500/30 inline-flex items-center space-x-2">
+                        <i class="fa-solid fa-sparkles"></i>
+                        <span>Pencocokan Cerdas AI</span>
+                    </span>
+                    <h1 class="text-3xl sm:text-4xl font-black tracking-tight text-white leading-tight">
+                        Kehilangan Barang? Atau Menemukan Milik Orang Lain?
+                    </h1>
+                    <p class="text-slate-300 text-sm sm:text-base leading-relaxed">
+                        <strong class="text-blue-400 font-semibold brand-title text-xl">Ketemu.in</strong> menghubungkan pemilik barang dan penemu secara cepat, transparan, dan terverifikasi.
+                    </p>
+                    <div class="flex flex-wrap gap-3 pt-2">
+                        <button onclick="navigateTo('cari')" class="bg-blue-600 hover:bg-blue-500 text-white font-semibold px-5 py-3 rounded-xl text-sm transition-all shadow-lg shadow-blue-600/30 flex items-center space-x-2">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <span>Cari Barang Hilang</span>
+                        </button>
+                        <button onclick="navigateTo('temukan')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-semibold px-5 py-3 rounded-xl text-sm transition-all shadow-lg shadow-emerald-600/30 flex items-center space-x-2">
+                            <i class="fa-solid fa-qrcode"></i>
+                            <span>Temukan & Scan Barcode</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Overview Cards -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-blue-400 mb-2">
+                        <i class="fa-solid fa-boxes-stacked text-2xl"></i>
+                        <span class="text-[10px] font-semibold uppercase bg-blue-500/10 px-2 py-0.5 rounded text-blue-300">Total</span>
+                    </div>
+                    <h3 id="stat-public-total" class="text-2xl sm:text-3xl font-extrabold">0</h3>
+                    <p class="text-xs text-slate-400 mt-0.5 font-medium">Laporan Diterima</p>
+                </div>
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-amber-400 mb-2">
+                        <i class="fa-solid fa-magnifying-glass text-2xl"></i>
+                        <span class="text-[10px] font-semibold uppercase bg-amber-500/10 px-2 py-0.5 rounded text-amber-300">Hilang</span>
+                    </div>
+                    <h3 id="stat-public-hilang" class="text-2xl sm:text-3xl font-extrabold text-amber-400">0</h3>
+                    <p class="text-xs text-slate-400 mt-0.5 font-medium">Mencari Pemilik</p>
+                </div>
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-emerald-400 mb-2">
+                        <i class="fa-solid fa-circle-check text-2xl"></i>
+                        <span class="text-[10px] font-semibold uppercase bg-emerald-500/10 px-2 py-0.5 rounded text-emerald-300">Selesai</span>
+                    </div>
+                    <h3 id="stat-public-kembali" class="text-2xl sm:text-3xl font-extrabold text-emerald-400">0</h3>
+                    <p class="text-xs text-slate-400 mt-0.5 font-medium">Telah Dikembalikan</p>
+                </div>
+                <div class="glass-card p-5 rounded-2xl">
+                    <div class="flex items-center justify-between text-purple-400 mb-2">
+                        <i class="fa-solid fa-location-dot text-2xl"></i>
+                        <span class="text-[10px] font-semibold uppercase bg-purple-500/10 px-2 py-0.5 rounded text-purple-300">Barcode</span>
+                    </div>
+                    <h3 id="stat-public-lokasi" class="text-2xl sm:text-3xl font-extrabold">0</h3>
+                    <p class="text-xs text-slate-400 mt-0.5 font-medium">Titik Lokasi Aktif</p>
+                </div>
+            </div>
+
+            <!-- Barang Terbaru Section -->
+            <div class="space-y-4">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-white flex items-center space-x-2">
+                        <i class="fa-solid fa-clock-rotate-left text-blue-400"></i>
+                        <span>Barang Terbaru Dilaporkan</span>
+                    </h3>
+                    <button onclick="navigateTo('cari')" class="text-xs font-semibold text-blue-400 hover:text-blue-300 flex items-center space-x-1">
+                        <span>Lihat Semua</span>
+                        <i class="fa-solid fa-arrow-right text-[10px]"></i>
+                    </button>
+                </div>
+                <div id="beranda-latest-items-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <!-- Dynamic Items Cards -->
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: CARI BARANG -->
+        <section id="view-cari" class="tab-view space-y-6 hidden">
+            <!-- Search & Filter Controls Panel -->
+            <div class="glass-card p-5 sm:p-6 rounded-2xl space-y-4">
+                <div class="flex flex-col md:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400"></i>
+                        <input type="text" id="search-keyword" oninput="applyItemFilters()" placeholder="Cari nama barang, warna, atau deskripsi..." class="w-full glass-input pl-11 pr-4 py-3 rounded-xl text-sm placeholder-slate-400">
+                    </div>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                        <select id="filter-kategori" onchange="applyItemFilters()" class="glass-input px-3 py-3 rounded-xl text-xs sm:text-sm">
+                            <option value="">Semua Kategori</option>
+                        </select>
+                        <select id="filter-lokasi" onchange="applyItemFilters()" class="glass-input px-3 py-3 rounded-xl text-xs sm:text-sm">
+                            <option value="">Semua Lokasi</option>
+                        </select>
+                        <select id="filter-status" onchange="applyItemFilters()" class="glass-input px-3 py-3 rounded-xl text-xs sm:text-sm col-span-2 sm:col-span-1">
+                            <option value="">Semua Status</option>
+                            <option value="Hilang">Hilang</option>
+                            <option value="Ditemukan">Ditemukan</option>
+                            <option value="Dikembalikan">Dikembalikan</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- AI Smart Match Helper Callout -->
+                <div class="bg-gradient-to-r from-blue-900/40 via-indigo-900/30 to-purple-900/40 p-4 rounded-xl border border-blue-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-wand-magic-sparkles text-sm"></i>
+                        </div>
+                        <div class="text-xs">
+                            <p class="font-bold text-blue-300">Asisten Pencocokan AI Cerdas</p>
+                            <p class="text-slate-300">Punya foto barang hilang? Gunakan AI untuk memindai & mencocokkan otomatis dengan database temuan.</p>
+                        </div>
+                    </div>
+                    <button onclick="triggerAiSmartMatch()" class="w-full sm:w-auto bg-blue-600 hover:bg-blue-500 text-white font-semibold px-4 py-2.5 rounded-xl text-xs transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2 shrink-0">
+                        <i class="fa-solid fa-camera"></i>
+                        <span>Upload Foto & Cocokkan AI</span>
+                    </button>
+                    <input type="file" id="ai-smart-file-input" accept="image/*" class="hidden" onchange="handleAiSearchFile(event)">
+                </div>
+            </div>
+
+            <!-- Items Search Grid -->
+            <div id="cari-items-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Items list dynamic insertion -->
+            </div>
+        </section>
+
+        <!-- VIEW 3: TEMUKAN & LAPORKAN -->
+        <section id="view-temukan" class="tab-view space-y-6 hidden">
+            <!-- Instruction Banner -->
+            <div class="glass-card p-6 sm:p-8 rounded-3xl space-y-6 border border-emerald-500/30 bg-gradient-to-br from-emerald-950/20 via-slate-900/80 to-slate-900/90">
+                <div class="flex items-start space-x-4">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-600/30 border border-emerald-500/40 text-emerald-400 flex items-center justify-center shrink-0 text-2xl shadow-lg">
+                        <i class="fa-solid fa-qrcode"></i>
+                    </div>
+                    <div class="space-y-1">
+                        <h3 class="text-xl font-bold text-white">Petunjuk Lapor Penemuan Barang via Barcode Lokasi</h3>
+                        <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                            Setiap titik lokasi (seperti Perpustakaan, Masjid, Lab, Kantin) memiliki stiker Kode Barcode lokasi resmi dari sekolah/instansi. Scan kode barcode tersebut untuk otomatis menentukan lokasi penemuan barang!
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Interactive Barcode Scanner Simulation -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+                    <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-4 flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <span class="text-xs font-bold text-emerald-400 uppercase tracking-wider">Metode 1: Scan Barcode Kamera</span>
+                            <h4 class="font-bold text-base text-white">Buka Kamera Pemindai</h4>
+                            <p class="text-xs text-slate-400">Arahkan kamera ke stiker barcode lokasi terdekat untuk mengisi form secara langsung.</p>
+                        </div>
+                        <button onclick="openBarcodeScannerModal()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-semibold py-3 rounded-xl text-xs transition-all shadow-lg shadow-emerald-600/30 flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-camera-retro text-base"></i>
+                            <span>Simulasi Scan Barcode Lokasi</span>
+                        </button>
+                    </div>
+
+                    <div class="bg-slate-900/80 p-5 rounded-2xl border border-slate-800 space-y-4 flex flex-col justify-between">
+                        <div class="space-y-2">
+                            <span class="text-xs font-bold text-blue-400 uppercase tracking-wider">Metode 2: Pilih Manual / Langsung Form</span>
+                            <h4 class="font-bold text-base text-white">Isi Form Penemuan Barang</h4>
+                            <p class="text-xs text-slate-400">Jika Anda tidak berada di titik barcode, Anda dapat memilih lokasi manual melalui formulir.</p>
+                        </div>
+                        <button onclick="openLaporFormModal('Ditemukan')" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-semibold py-3 rounded-xl text-xs transition-all shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2">
+                            <i class="fa-solid fa-pen-to-square text-base"></i>
+                            <span>Buka Form Lapor Barang</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Auth Guard Warning for Guest -->
+                <div id="temukan-auth-guard-notice" class="bg-amber-500/10 border border-amber-500/30 p-4 rounded-2xl flex items-center justify-between gap-4">
+                    <div class="flex items-center space-x-3 text-xs text-amber-200">
+                        <i class="fa-solid fa-triangle-exclamation text-lg text-amber-400"></i>
+                        <span><strong>Catatan:</strong> Pelaporan membutuhkan akun agar status barang dan notifikasi penemuan dapat dikirimkan ke Anda.</span>
+                    </div>
+                    <button onclick="navigateTo('masuk')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition-all shrink-0">
+                        Masuk / Daftar Akun
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 4: MASUK / DAFTAR -->
+        <section id="view-masuk" class="tab-view space-y-6 hidden">
+            <div class="max-w-md mx-auto space-y-6">
+                <!-- Toggle Tab Buttons -->
+                <div class="flex p-1 bg-slate-900/90 rounded-2xl border border-slate-800">
+                    <button onclick="switchAuthTab('login')" id="auth-tab-login-btn" class="flex-1 py-2.5 text-xs font-bold rounded-xl transition-all bg-blue-600 text-white shadow-lg">
+                        Masuk (Login)
+                    </button>
+                    <button onclick="switchAuthTab('register')" id="auth-tab-register-btn" class="flex-1 py-2.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white">
+                        Daftar Akun Baru
+                    </button>
+                </div>
+
+                <!-- Login Form Box -->
+                <div id="auth-login-box" class="glass-card p-6 sm:p-8 rounded-3xl space-y-5">
+                    <div class="text-center space-y-1">
+                        <h3 class="text-2xl font-bold text-white">Selamat Datang Kembali</h3>
+                        <p class="text-xs text-slate-400">Masuk ke akun Ketemu.in Anda untuk mengelola laporan</p>
+                    </div>
+
+                    <!-- Quick Demo Credentials Box -->
+                    <div class="bg-slate-900/80 p-3 rounded-2xl border border-slate-800/80 text-[11px] text-slate-300 space-y-2">
+                        <p class="font-bold text-blue-400 flex items-center space-x-1">
+                            <i class="fa-solid fa-key"></i>
+                            <span>Uji Coba Cepat (Demo Login):</span>
+                        </p>
+                        <div class="grid grid-cols-2 gap-2">
+                            <button onclick="fillDemoLogin('user')" type="button" class="bg-slate-800 hover:bg-slate-700 p-2 rounded-xl border border-slate-700 text-left">
+                                <p class="font-bold text-slate-200">User Biasa / Pelapor</p>
+                                <p class="text-[10px] text-slate-400">user | user123</p>
+                            </button>
+                            <button onclick="fillDemoLogin('admin')" type="button" class="bg-slate-800 hover:bg-slate-700 p-2 rounded-xl border border-slate-700 text-left">
+                                <p class="font-bold text-blue-400">Admin Sekolah</p>
+                                <p class="text-[10px] text-slate-400">admin | admin123</p>
+                            </button>
+                        </div>
+                    </div>
+
+                    <form onsubmit="handleAuthLogin(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs uppercase font-bold text-slate-400 mb-1.5">Username / Email</label>
+                            <input type="text" id="login-username" required placeholder="Masukkan username..." class="w-full glass-input px-4 py-3 rounded-xl text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase font-bold text-slate-400 mb-1.5">Kata Sandi</label>
+                            <input type="password" id="login-password" required placeholder="••••••••" class="w-full glass-input px-4 py-3 rounded-xl text-sm">
+                        </div>
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-blue-600/30">
+                            Masuk Ke Akun
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Register Form Box -->
+                <div id="auth-register-box" class="glass-card p-6 sm:p-8 rounded-3xl space-y-5 hidden">
+                    <div class="text-center space-y-1">
+                        <h3 class="text-2xl font-bold text-white">Buat Akun Pelapor Baru</h3>
+                        <p class="text-xs text-slate-400">Daftarkan diri Anda untuk melacak barang hilang & temuan</p>
+                    </div>
+
+                    <form onsubmit="handleAuthRegister(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-xs uppercase font-bold text-slate-400 mb-1.5">Nama Lengkap</label>
+                            <input type="text" id="reg-fullname" required placeholder="Contoh: Ahmad Raihan" class="w-full glass-input px-4 py-3 rounded-xl text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase font-bold text-slate-400 mb-1.5">Username</label>
+                            <input type="text" id="reg-username" required placeholder="username_unik" class="w-full glass-input px-4 py-3 rounded-xl text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase font-bold text-slate-400 mb-1.5">Nomor WA / Kontak</label>
+                            <input type="tel" id="reg-phone" required placeholder="08123456789" class="w-full glass-input px-4 py-3 rounded-xl text-sm">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase font-bold text-slate-400 mb-1.5">Kata Sandi Baru</label>
+                            <input type="password" id="reg-password" required placeholder="••••••••" class="w-full glass-input px-4 py-3 rounded-xl text-sm">
+                        </div>
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-emerald-600/30">
+                            Daftar Sekarang
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- SECTION 2: MENU SETELAH LOGIN (USER BIASA / PELAPOR)    -->
+        <!-- ======================================================== -->
+
+        <!-- VIEW USER 1: DASHBOARD SAYA -->
+        <section id="view-user-dashboard" class="tab-view space-y-6 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div class="glass-card p-5 rounded-2xl border-l-4 border-l-blue-500">
+                    <p class="text-xs text-slate-400 uppercase font-semibold">Total Laporan Saya</p>
+                    <h3 id="user-stat-total" class="text-3xl font-extrabold text-white mt-1">0</h3>
+                </div>
+                <div class="glass-card p-5 rounded-2xl border-l-4 border-l-amber-500">
+                    <p class="text-xs text-slate-400 uppercase font-semibold">Status Sedang Diproses</p>
+                    <h3 id="user-stat-proses" class="text-3xl font-extrabold text-amber-400 mt-1">0</h3>
+                </div>
+                <div class="glass-card p-5 rounded-2xl border-l-4 border-l-emerald-500">
+                    <p class="text-xs text-slate-400 uppercase font-semibold">Laporan Selesai / Fit</p>
+                    <h3 id="user-stat-selesai" class="text-3xl font-extrabold text-emerald-400 mt-1">0</h3>
+                </div>
+            </div>
+
+            <!-- Quick Action Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <button onclick="openLaporFormModal('Hilang')" class="glass-card p-6 rounded-2xl hover:border-blue-500/50 transition-all text-left flex items-center space-x-4 group">
+                    <div class="w-12 h-12 rounded-2xl bg-blue-600/20 text-blue-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-box-open"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-base text-white">Buat Laporan Barang Hilang</h4>
+                        <p class="text-xs text-slate-400 mt-0.5">Laporkan ciri-ciri barang Anda yang hilang untuk diproses AI.</p>
+                    </div>
+                </button>
+
+                <button onclick="openLaporFormModal('Ditemukan')" class="glass-card p-6 rounded-2xl hover:border-emerald-500/50 transition-all text-left flex items-center space-x-4 group">
+                    <div class="w-12 h-12 rounded-2xl bg-emerald-600/20 text-emerald-400 flex items-center justify-center text-2xl group-hover:scale-110 transition-transform">
+                        <i class="fa-solid fa-hand-holding-heart"></i>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-base text-white">Buat Laporan Barang Temuan</h4>
+                        <p class="text-xs text-slate-400 mt-0.5">Bantu mengembalikan barang milik orang lain yang Anda temukan.</p>
+                    </div>
+                </button>
+            </div>
+
+            <!-- Summary Table Recent My Reports -->
+            <div class="glass-card p-5 sm:p-6 rounded-3xl space-y-4">
+                <h3 class="font-bold text-base text-white flex items-center justify-between">
+                    <span>Ringkasan Laporan Terakhir Saya</span>
+                    <button onclick="navigateTo('user-laporan')" class="text-xs text-blue-400 hover:underline">Lihat Semua</button>
+                </h3>
+                <div id="user-recent-reports-container" class="space-y-3">
+                    <!-- Dynamic List -->
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW USER 2: LAPORAN SAYA -->
+        <section id="view-user-laporan" class="tab-view space-y-6 hidden">
+            <div class="flex items-center justify-between flex-wrap gap-3">
+                <div class="flex space-x-2">
+                    <button onclick="filterMyReports('semua')" id="my-report-filter-semua" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white">Semua</button>
+                    <button onclick="filterMyReports('Hilang')" id="my-report-filter-hilang" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300">Barang Hilang Saya</button>
+                    <button onclick="filterMyReports('Ditemukan')" id="my-report-filter-temuan" class="px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300">Temuan Saya</button>
+                </div>
+                <button onclick="openLaporFormModal('Hilang')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-all shadow-lg shadow-blue-600/20 flex items-center space-x-2">
+                    <i class="fa-solid fa-plus"></i>
+                    <span>Buat Laporan Baru</span>
+                </button>
+            </div>
+
+            <div id="my-reports-list-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <!-- User's own report cards -->
+            </div>
+        </section>
+
+        <!-- VIEW USER 3: NOTIFIKASI -->
+        <section id="view-user-notifikasi" class="tab-view space-y-6 hidden">
+            <div class="glass-card p-6 rounded-3xl space-y-4">
+                <div class="flex items-center justify-between pb-3 border-b border-slate-800">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-bell text-blue-400 text-lg"></i>
+                        <h3 class="font-bold text-base text-white">Notifikasi & Pencocokan AI</h3>
+                    </div>
+                    <button onclick="markNotificationsAsRead()" class="text-xs text-slate-400 hover:text-white">Tandai Dibaca Semua</button>
+                </div>
+                <div id="user-notifications-list" class="space-y-3">
+                    <!-- Dynamic notifications list -->
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW USER 4: PROFIL SAYA -->
+        <section id="view-user-profil" class="tab-view space-y-6 hidden">
+            <div class="max-w-xl mx-auto glass-card p-6 sm:p-8 rounded-3xl space-y-6">
+                <div class="flex items-center space-x-4">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 to-emerald-500 text-white font-extrabold text-2xl flex items-center justify-center shadow-lg">
+                        <span id="profile-avatar-initial">U</span>
+                    </div>
+                    <div>
+                        <h3 id="profile-fullname-display" class="font-bold text-xl text-white">Nama Pengguna</h3>
+                        <p id="profile-role-badge" class="text-xs text-blue-400 font-semibold">Peran: Pelapor / User Biasa</p>
+                    </div>
+                </div>
+
+                <form onsubmit="handleSaveProfile(event)" class="space-y-4 pt-2">
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-slate-400 mb-1.5">Nama Lengkap</label>
+                        <input type="text" id="profile-fullname-input" required class="w-full glass-input px-4 py-3 rounded-xl text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-slate-400 mb-1.5">Username</label>
+                        <input type="text" id="profile-username-input" disabled class="w-full glass-input px-4 py-3 rounded-xl text-sm opacity-60 cursor-not-allowed">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-slate-400 mb-1.5">Nomor WhatsApp / Kontak Aktif</label>
+                        <input type="tel" id="profile-phone-input" required class="w-full glass-input px-4 py-3 rounded-xl text-sm">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3.5 rounded-xl text-sm transition-all shadow-lg shadow-blue-600/30">
+                        Simpan Perubahan Profil
+                    </button>
+                </form>
+            </div>
+        </section>
+
+        <!-- ======================================================== -->
+        <!-- SECTION 3: MENU KHUSUS ADMIN                             -->
+        <!-- ======================================================== -->
+
+        <!-- VIEW ADMIN 1: DASHBOARD ADMIN -->
+        <section id="view-admin-dashboard" class="tab-view space-y-6 hidden">
+            <!-- Executive Stats Cards Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-card p-5 rounded-2xl border-t-4 border-t-blue-500">
+                    <p class="text-xs text-slate-400 font-semibold uppercase">Total Laporan Masuk</p>
+                    <h3 id="adm-stat-total" class="text-3xl font-black text-white mt-2">0</h3>
+                    <p class="text-[11px] text-slate-500 mt-1">Keseluruhan entri database</p>
+                </div>
+                <div class="glass-card p-5 rounded-2xl border-t-4 border-t-amber-500">
+                    <p class="text-xs text-amber-400 font-semibold uppercase">Belum Ditemukan Pemilik</p>
+                    <h3 id="adm-stat-unfound" class="text-3xl font-black text-amber-400 mt-2">0</h3>
+                    <p class="text-[11px] text-slate-500 mt-1">Perlu pemantauan aktif</p>
+                </div>
+                <div class="glass-card p-5 rounded-2xl border-t-4 border-t-emerald-500">
+                    <p class="text-xs text-emerald-400 font-semibold uppercase">Telah Dikembalikan</p>
+                    <h3 id="adm-stat-returned" class="text-3xl font-black text-emerald-400 mt-2">0</h3>
+                    <p class="text-[11px] text-slate-500 mt-1">Berhasil diselesaikan</p>
+                </div>
+                <div class="glass-card p-5 rounded-2xl border-t-4 border-t-purple-500">
+                    <p class="text-xs text-purple-400 font-semibold uppercase">Laporan Perlu Ditinjau</p>
+                    <h3 id="adm-stat-pending" class="text-3xl font-black text-purple-400 mt-2">0</h3>
+                    <p class="text-[11px] text-slate-500 mt-1">Belum terverifikasi admin</p>
+                </div>
+            </div>
+
+            <!-- Quick Action Command Bar -->
+            <div class="glass-card p-6 rounded-3xl space-y-4">
+                <h3 class="font-bold text-base text-white">Panel Kendali Cepat Admin</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <button onclick="navigateTo('admin-barang')" class="p-4 bg-slate-800 hover:bg-slate-700/80 rounded-2xl text-left border border-slate-700/60 transition-all">
+                        <i class="fa-solid fa-boxes-packing text-blue-400 text-xl mb-2"></i>
+                        <p class="font-bold text-xs text-white">Kelola Barang</p>
+                        <p class="text-[10px] text-slate-400">Verifikasi / Edit Status</p>
+                    </button>
+                    <button onclick="navigateTo('admin-barcode')" class="p-4 bg-slate-800 hover:bg-slate-700/80 rounded-2xl text-left border border-slate-700/60 transition-all">
+                        <i class="fa-solid fa-qrcode text-emerald-400 text-xl mb-2"></i>
+                        <p class="font-bold text-xs text-white">Cetak Barcode</p>
+                        <p class="text-[10px] text-slate-400">Generate QR Gedung</p>
+                    </button>
+                    <button onclick="navigateTo('admin-pengguna')" class="p-4 bg-slate-800 hover:bg-slate-700/80 rounded-2xl text-left border border-slate-700/60 transition-all">
+                        <i class="fa-solid fa-users-gear text-purple-400 text-xl mb-2"></i>
+                        <p class="font-bold text-xs text-white">Kelola Pengguna</p>
+                        <p class="text-[10px] text-slate-400">Atur Akses User</p>
+                    </button>
+                    <button onclick="navigateTo('admin-pengaturan')" class="p-4 bg-slate-800 hover:bg-slate-700/80 rounded-2xl text-left border border-slate-700/60 transition-all">
+                        <i class="fa-solid fa-sliders text-amber-400 text-xl mb-2"></i>
+                        <p class="font-bold text-xs text-white">Pengaturan</p>
+                        <p class="text-[10px] text-slate-400">Kategori & Rules</p>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW ADMIN 2: KELOLA BARANG -->
+        <section id="view-admin-barang" class="tab-view space-y-6 hidden">
+            <div class="glass-card p-5 sm:p-6 rounded-3xl space-y-4">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <h3 class="font-bold text-lg text-white">Seluruh Laporan Barang Sistem</h3>
+                    <div class="flex items-center space-x-2">
+                        <input type="text" id="admin-search-item" oninput="renderAdminItemsTable()" placeholder="Filter kata kunci..." class="glass-input px-3 py-2 rounded-xl text-xs">
+                        <button onclick="openLaporFormModal('Hilang')" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-3 py-2 rounded-xl text-xs shrink-0">
+                            + Tambah Manual
+                        </button>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/80 uppercase text-[10px] text-slate-400 font-bold border-b border-slate-800">
+                            <tr>
+                                <th class="p-3">Barang & Foto</th>
+                                <th class="p-3">Tipe / Kategori</th>
+                                <th class="p-3">Lokasi</th>
+                                <th class="p-3">Pelapor</th>
+                                <th class="p-3">Status</th>
+                                <th class="p-3 text-right">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-items-table-body" class="divide-y divide-slate-800/60">
+                            <!-- Dynamic Table Rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW ADMIN 3: KELOLA BARCODE LOKASI -->
+        <section id="view-admin-barcode" class="tab-view space-y-6 hidden">
+            <!-- Add New Location Form -->
+            <div class="glass-card p-6 rounded-3xl space-y-4 border border-emerald-500/30">
+                <h3 class="font-bold text-base text-white flex items-center space-x-2">
+                    <i class="fa-solid fa-plus-circle text-emerald-400"></i>
+                    <span>Buat Barcode Lokasi Baru</span>
+                </h3>
+                <form onsubmit="handleAdminAddLocation(event)" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                    <input type="text" id="new-loc-name" required placeholder="Nama Lokasi (ex: Perpustakaan)" class="glass-input px-4 py-3 rounded-xl text-xs">
+                    <input type="text" id="new-loc-desc" required placeholder="Keterangan Gedung / Lantai..." class="glass-input px-4 py-3 rounded-xl text-xs">
+                    <button type="submit" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-xs transition-all shadow-lg shadow-emerald-600/30">
+                        + Generate Kode QR Lokasi
+                    </button>
+                </form>
+            </div>
+
+            <!-- Printable Barcodes Cards Grid -->
+            <div id="admin-barcodes-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Barcode QR Cards inserted dynamically -->
+            </div>
+        </section>
+
+        <!-- VIEW ADMIN 4: KELOLA PENGGUNA -->
+        <section id="view-admin-pengguna" class="tab-view space-y-6 hidden">
+            <div class="glass-card p-6 rounded-3xl space-y-4">
+                <h3 class="font-bold text-base text-white">Daftar Akun Pengguna & Hak Akses</h3>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left text-xs text-slate-300">
+                        <thead class="bg-slate-900/80 uppercase text-[10px] text-slate-400 font-bold border-b border-slate-800">
+                            <tr>
+                                <th class="p-3">Pengguna</th>
+                                <th class="p-3">Username</th>
+                                <th class="p-3">Kontak WA</th>
+                                <th class="p-3">Peran / Hak Akses</th>
+                                <th class="p-3 text-right">Tindakan</th>
+                            </tr>
+                        </thead>
+                        <tbody id="admin-users-table-body" class="divide-y divide-slate-800/60">
+                            <!-- Dynamic user rows -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW ADMIN 5: PENGATURAN -->
+        <section id="view-admin-pengaturan" class="tab-view space-y-6 hidden">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Categories Editor -->
+                <div class="glass-card p-6 rounded-3xl space-y-4">
+                    <h3 class="font-bold text-base text-white">Kategori Barang</h3>
+                    <div id="admin-categories-tags" class="flex flex-wrap gap-2">
+                        <!-- Dynamic tags -->
+                    </div>
+                    <form onsubmit="handleAdminAddCategory(event)" class="flex gap-2 pt-2">
+                        <input type="text" id="new-cat-input" placeholder="Tambah kategori baru..." class="flex-1 glass-input px-3 py-2 rounded-xl text-xs">
+                        <button type="submit" class="bg-blue-600 hover:bg-blue-500 text-white font-bold px-4 py-2 rounded-xl text-xs">Tambah</button>
+                    </form>
+                </div>
+
+                <!-- Rules & System Config -->
+                <div class="glass-card p-6 rounded-3xl space-y-4">
+                    <h3 class="font-bold text-base text-white">Aturan Pengelolaan Laporan</h3>
+                    <div class="space-y-3 text-xs text-slate-300">
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" checked class="rounded border-slate-700 bg-slate-900 text-blue-600 focus:ring-0">
+                            <span>Otomatis verifikasi laporan dengan foto lengkap</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" checked class="rounded border-slate-700 bg-slate-900 text-blue-600 focus:ring-0">
+                            <span>Kirim notifikasi otomatis saat AI mendeteksi kemiripan</span>
+                        </label>
+                        <label class="flex items-center space-x-2 cursor-pointer">
+                            <input type="checkbox" class="rounded border-slate-700 bg-slate-900 text-blue-600 focus:ring-0">
+                            <span>Sembunyikan kontak pelapor sebelum terverifikasi</span>
+                        </label>
+                    </div>
+                    <button onclick="showCustomModal('Berhasil', 'Pengaturan sistem berhasil diperbarui!')" class="w-full bg-slate-800 hover:bg-slate-700 font-bold py-2.5 rounded-xl text-xs border border-slate-700">
+                        Simpan Aturan Sistem
+                    </button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ======================================================== -->
+    <!-- MODALS & OVERLAYS                                        -->
+    <!-- ======================================================== -->
+
+    <!-- Lapor Barang Form Modal (For Lost or Found) -->
+    <div id="modal-lapor-form" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-lg w-full space-y-5 border border-slate-700 my-8">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <h3 id="lapor-modal-title" class="font-bold text-lg text-white">Form Lapor Barang</h3>
+                <button onclick="closeLaporFormModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <form onsubmit="handleSubmitReportForm(event)" class="space-y-4">
+                <input type="hidden" id="form-item-type" value="Hilang">
+
+                <div>
+                    <label class="block text-xs uppercase font-bold text-slate-400 mb-1">Nama Barang</label>
+                    <input type="text" id="form-item-name" required placeholder="Contoh: Tumbler Biru Hydroflask / Dompet Kulit Cokelat..." class="w-full glass-input px-4 py-2.5 rounded-xl text-xs">
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-slate-400 mb-1">Kategori</label>
+                        <select id="form-item-category" required class="w-full glass-input px-3 py-2.5 rounded-xl text-xs">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase font-bold text-slate-400 mb-1">Lokasi Kejadian</label>
+                        <select id="form-item-location" required class="w-full glass-input px-3 py-2.5 rounded-xl text-xs">
+                            <!-- Populated dynamically -->
+                        </select>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase font-bold text-slate-400 mb-1">Tanggal Kejadian / Ditemukan</label>
+                    <input type="date" id="form-item-date" required class="w-full glass-input px-4 py-2.5 rounded-xl text-xs">
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase font-bold text-slate-400 mb-1">Deskripsi & Ciri-Ciri Khusus</label>
+                    <textarea id="form-item-desc" rows="3" required placeholder="Warna, stiker khusus, tulisan, gantung kunci, dll..." class="w-full glass-input p-3 rounded-xl text-xs"></textarea>
+                </div>
+
+                <div>
+                    <label class="block text-xs uppercase font-bold text-slate-400 mb-1">Foto Barang (Opsional / AI Match)</label>
+                    <input type="file" id="form-item-photo" accept="image/*" class="w-full text-xs text-slate-400 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-semibold file:bg-blue-600 file:text-white hover:file:bg-blue-500">
+                </div>
+
+                <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl text-xs transition-all shadow-lg shadow-blue-600/30">
+                    Kirimkan Laporan Sekarang
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Barcode Scanner Simulation Modal -->
+    <div id="modal-barcode-scanner" class="fixed inset-0 bg-black/85 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card p-6 rounded-3xl max-w-sm w-full space-y-4 text-center border border-emerald-500/30">
+            <h3 class="font-bold text-base text-white">Simulasi Scan Barcode Lokasi</h3>
+            <p class="text-xs text-slate-300">Pilih salah satu stiker barcode lokasi terdekat yang ingin Anda pindai:</p>
+            
+            <div id="scanner-location-buttons" class="space-y-2">
+                <!-- Location simulation buttons -->
+            </div>
+
+            <button onclick="closeBarcodeScannerModal()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2 rounded-xl text-xs mt-2">
+                Batal
+            </button>
+        </div>
+    </div>
+
+    <!-- Detail Item Modal -->
+    <div id="modal-item-detail" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card p-6 sm:p-8 rounded-3xl max-w-lg w-full space-y-5 border border-slate-700 max-h-[90vh] overflow-y-auto custom-scrollbar">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+                <span id="detail-type-badge" class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase">
+                    HILANG
+                </span>
+                <button onclick="closeItemDetailModal()" class="text-slate-400 hover:text-white p-1">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3">
+                <div id="detail-image-box" class="w-full h-48 rounded-2xl overflow-hidden bg-slate-900 flex items-center justify-center border border-slate-800">
+                    <!-- Image -->
+                </div>
+                <div>
+                    <h3 id="detail-item-title" class="text-xl font-bold text-white">Nama Barang</h3>
+                    <p id="detail-item-cat" class="text-xs text-blue-400 font-semibold mt-0.5">Kategori</p>
+                </div>
+                <div class="grid grid-cols-2 gap-2 text-xs bg-slate-900/60 p-3 rounded-2xl border border-slate-800">
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">Lokasi Kejadian:</span>
+                        <strong id="detail-item-loc" class="text-slate-200">Gedung Perpustakaan</strong>
+                    </div>
+                    <div>
+                        <span class="text-slate-400 block text-[10px]">Tanggal:</span>
+                        <strong id="detail-item-date" class="text-slate-200">12 Okt 2026</strong>
+                    </div>
+                </div>
+                <div>
+                    <span class="text-xs font-bold text-slate-400 block mb-1">Deskripsi & Ciri-Ciri:</span>
+                    <p id="detail-item-desc" class="text-xs text-slate-300 leading-relaxed bg-slate-900/40 p-3 rounded-xl border border-slate-800/80">
+                        Deskripsi rinci...
+                    </p>
+                </div>
+                <div class="p-3 rounded-xl bg-blue-900/20 border border-blue-500/30 text-xs flex items-center justify-between">
+                    <div>
+                        <span class="text-slate-400 text-[10px] block">Pelapor / Kontak WA:</span>
+                        <strong id="detail-item-contact" class="text-blue-300">Ahmad (+62812345678)</strong>
+                    </div>
+                    <a id="detail-wa-btn" href="#" target="_blank" class="bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs flex items-center space-x-1">
+                        <i class="fa-brands fa-whatsapp"></i>
+                        <span>Hubungi</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Printable Barcode Preview Area (Hidden by default, shown during print) -->
+    <div id="print-area" class="hidden">
+        <div class="p-8 text-center space-y-4">
+            <h1 class="text-2xl font-bold">Ketemu.in - BARCODE STIKER LOKASI</h1>
+            <p id="print-loc-name" class="text-xl font-bold text-blue-600"></p>
+            <div id="print-qr-target" class="flex justify-center py-4"></div>
+            <p id="print-loc-desc" class="text-sm text-gray-600"></p>
+            <p class="text-xs text-gray-400 font-mono">Scan barcode ini untuk melaporkan penemuan barang secara instan</p>
+        </div>
+    </div>
+
+    <!-- Custom Notification Alert Modal -->
+    <div id="custom-modal" class="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="glass-card p-6 rounded-3xl max-w-sm w-full text-center space-y-4 border border-slate-700 shadow-2xl">
+            <div id="modal-icon-box" class="w-12 h-12 rounded-2xl bg-blue-500/20 text-blue-400 flex items-center justify-center mx-auto text-xl">
+                <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <h3 id="modal-title" class="font-bold text-base text-white">Notifikasi</h3>
+            <p id="modal-msg" class="text-xs text-slate-300 leading-relaxed"></p>
+            <button onclick="closeCustomModal()" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-2.5 rounded-xl text-xs transition-all">
+                Mengerti
+            </button>
+        </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- JAVASCRIPT APPLICATION LOGIC                             -->
+    <!-- ======================================================== -->
+    <script>
+        // State storage for application
+        let state = {
+            currentUser: null, // { username, fullname, role: 'user' | 'admin', phone }
+            activeTab: 'beranda',
+            myReportFilter: 'semua',
+            categories: ['Elektronik', 'Dokumen / Kartu', 'Kunci', 'Dompet / Uang', 'Pakaian & Tas', 'Lain-lain'],
+            locations: [
+                { id: 'LOC-01', name: 'Perpustakaan Utama', desc: 'Gedung A Lantai 1 dekat rak buku' },
+                { id: 'LOC-02', name: 'Masjid / Mushola', desc: 'Area tempat wudhu & rak sepatu' },
+                { id: 'LOC-03', name: 'Laboratorium Komputer', desc: 'Ruang Lab Komputer 2' },
+                { id: 'LOC-04', name: 'Kantin / Gazebo', desc: 'Area meja makan kantin tengah' }
+            ],
+            items: [
+                {
+                    id: 'ITM-101',
+                    name: 'Dompet Kulit Cokelat',
+                    category: 'Dompet / Uang',
+                    location: 'Perpustakaan Utama',
+                    date: '2026-10-12',
+                    desc: 'Berisi Kartu Pelajar a.n. Budi dan beberapa nota. Warna cokelat tua.',
+                    type: 'Hilang',
+                    status: 'Belum Ditemukan',
+                    reporter: 'user',
+                    phone: '081234567891',
+                    photo: 'https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=500&q=80'
+                },
+                {
+                    id: 'ITM-102',
+                    name: 'Kunci Motor Honda + Gantungan',
+                    category: 'Kunci',
+                    location: 'Kantin / Gazebo',
+                    date: '2026-10-14',
+                    desc: 'Ditemukan di atas meja kantin dekat kasir. Ada gantungan karakter anime.',
+                    type: 'Ditemukan',
+                    status: 'Ditemukan',
+                    reporter: 'Siti Aminah',
+                    phone: '089876543210',
+                    photo: 'https://images.unsplash.com/photo-1582139329536-e7284fece509?auto=format&fit=crop&w=500&q=80'
+                },
+                {
+                    id: 'ITM-103',
+                    name: 'Tumbler Minum Biru Hydro',
+                    category: 'Lain-lain',
+                    location: 'Laboratorium Komputer',
+                    date: '2026-10-10',
+                    desc: 'Tertinggal di meja Lab Komputer. Tertulis stiker angka 12.',
+                    type: 'Ditemukan',
+                    status: 'Dikembalikan',
+                    reporter: 'Admin Sekolah',
+                    phone: '081122334455',
+                    photo: 'https://images.unsplash.com/photo-1602143407151-7111542de6e8?auto=format&fit=crop&w=500&q=80'
+                }
+            ],
+            notifications: [
+                {
+                    id: 'NFT-01',
+                    user: 'user',
+                    text: 'Sistem AI mencocokkan "Dompet Kulit Cokelat" dengan barang temuan di Perpustakaan!',
+                    date: '10 Mins ago',
+                    read: false
+                }
+            ],
+            users: [
+                { username: 'admin', fullname: 'Administrator Sekolah', role: 'admin', phone: '081122334455' },
+                { username: 'user', fullname: 'Ahmad Pelapor', role: 'user', phone: '081234567891' }
+            ]
+        };
+
+
+        // ====== KONEKSI GOOGLE SHEETS (Apps Script) ======
+        const API_URL = 'https://script.google.com/macros/s/AKfycbzM7Tk9uaPJ0AD_p28pVDmJJmTNPLP20MzF_47a8Z6bxRizQsxON7rBA9aaR9BDJZrDVA/exec';
+        async function api(action, payload = {}) {
+            if (API_URL.startsWith('PASTE')) throw new Error('API_URL belum diisi');
+            const auth = state.currentUser ? { username: state.currentUser.username, token: state.currentUser.token } : null;
+            const r = await fetch(API_URL, { method: 'POST', body: JSON.stringify({ action, auth, ...payload }) });
+            return r.json();
+        }
+        // simpan di latar belakang; tampilkan pesan bila gagal
+        function bg(action, payload) {
+            api(action, payload)
+                .then(r => { if (!r.ok) showCustomModal('Gagal Menyimpan', r.error); })
+                .catch(() => showCustomModal('Koneksi Gagal', 'Perubahan belum tersimpan ke spreadsheet.'));
+        }
+        async function loadData() {
+            try {
+                const r = await api('load');
+                if (!r.ok) return;
+                if (!r.authOk) { state.currentUser = null; localStorage.removeItem('ketemu_user'); }
+                state.items = r.items; state.locations = r.locations; state.categories = r.categories;
+                state.notifications = r.notifications; state.users = r.users;
+            } catch (e) { console.warn('Memakai data demo:', e.message); }
+        }
+        async function startSession(user) {
+            state.currentUser = user;
+            localStorage.setItem('ketemu_user', JSON.stringify(user));
+            await loadData();
+            populateDropdownOptions(); updateTopUserPill(); renderNavigation();
+            const scanning = !!sessionStorage.getItem('ketemu_scan');
+            if (!scanning) showCustomModal('Login Berhasil', `Selamat datang, ${user.fullname}!`);
+            navigateTo(user.role === 'admin' ? 'admin-dashboard' : 'user-dashboard');
+            checkScanLink();
+        }
+
+        // ====== UPLOAD FOTO ======
+        function compressImage(file, max = 800) {
+            return new Promise((resolve, reject) => {
+                const img = new Image(), url = URL.createObjectURL(file);
+                img.onload = () => {
+                    const r = Math.min(1, max / Math.max(img.width, img.height));
+                    const c = document.createElement('canvas');
+                    c.width = Math.round(img.width * r); c.height = Math.round(img.height * r);
+                    c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+                    URL.revokeObjectURL(url);
+                    resolve(c.toDataURL('image/jpeg', 0.75));
+                };
+                img.onerror = () => reject(new Error('File bukan gambar yang valid.'));
+                img.src = url;
+            });
+        }
+        async function uploadPhoto(file) {
+            const dataUrl = await compressImage(file);
+            if (API_URL.startsWith('PASTE')) return dataUrl; // mode demo: simpan di memori saja
+            const r = await api('upload', { data: dataUrl.split(',')[1], name: 'foto-' + Date.now() + '.jpg' });
+            if (!r.ok) throw new Error(r.error);
+            return r.url;
+        }
+
+        // ====== BARCODE LOKASI ======
+        const SITE_URL = 'https://nurrahmaniyah43-sudo.github.io/ketemu.in2/';
+        const scanUrl = loc => `${SITE_URL}?lokasi=${encodeURIComponent(loc.id)}`;
+        // Dipanggil saat halaman dibuka: jika dari scan QR, buka form lapor dengan lokasi terisi
+        function checkScanLink() {
+            const p = new URLSearchParams(location.search).get('lokasi');
+            if (p) {
+                sessionStorage.setItem('ketemu_scan', p);
+                history.replaceState(null, '', location.pathname);
+            }
+            const pending = sessionStorage.getItem('ketemu_scan');
+            if (!pending) return;
+            const loc = state.locations.find(l => l.id === pending || l.name === pending);
+            if (!loc) { sessionStorage.removeItem('ketemu_scan'); return; }
+            if (state.currentUser) sessionStorage.removeItem('ketemu_scan'); // belum login: simpan, buka lagi setelah login
+            openLaporFormModal('Ditemukan', loc.name);
+        }
+
+        // Navigation Structure definition according to requirement
+        const navStructure = {
+            guest: [
+                { id: 'beranda', label: 'Beranda', icon: 'fa-house' },
+                { id: 'cari', label: 'Cari Barang', icon: 'fa-magnifying-glass' },
+                { id: 'temukan', label: 'Temukan & Laporkan', icon: 'fa-qrcode' },
+                { id: 'masuk', label: 'Masuk / Daftar', icon: 'fa-right-to-bracket' }
+            ],
+            user: [
+                { id: 'user-dashboard', label: 'Dashboard Saya', icon: 'fa-chart-pie' },
+                { id: 'user-laporan', label: 'Laporan Saya', icon: 'fa-box-archive' },
+                { id: 'user-notifikasi', label: 'Notifikasi', icon: 'fa-bell', badge: true },
+                { id: 'user-profil', label: 'Profil Saya', icon: 'fa-user' },
+                { id: 'logout', label: 'Keluar', icon: 'fa-right-from-bracket', isLogout: true }
+            ],
+            admin: [
+                { id: 'admin-dashboard', label: 'Dashboard Admin', icon: 'fa-gauge-high' },
+                { id: 'admin-barang', label: 'Kelola Barang', icon: 'fa-boxes-stacked' },
+                { id: 'admin-barcode', label: 'Kelola Barcode Lokasi', icon: 'fa-qrcode' },
+                { id: 'admin-pengguna', label: 'Kelola Pengguna', icon: 'fa-users' },
+                { id: 'admin-pengaturan', label: 'Pengaturan', icon: 'fa-sliders' },
+                { id: 'logout', label: 'Keluar', icon: 'fa-right-from-bracket', isLogout: true }
+            ]
+        };
+
+        // Initializer
+        window.addEventListener('DOMContentLoaded', async () => {
+            try { const s = localStorage.getItem('ketemu_user'); if (s) state.currentUser = JSON.parse(s); } catch (e) {}
+            await loadData();
+            populateDropdownOptions();
+            renderNavigation();
+            updateTopUserPill();
+            const u = state.currentUser;
+            navigateTo(u ? (u.role === 'admin' ? 'admin-dashboard' : 'user-dashboard') : 'beranda');
+            checkScanLink();
+        });
+
+        // Navigation Switcher Logic
+        function renderNavigation() {
+            const container = document.getElementById('nav-container');
+            let role = 'guest';
+            if (state.currentUser) {
+                role = state.currentUser.role;
+            }
+
+            const roleBadge = document.getElementById('current-role-badge');
+            const roleDesc = document.getElementById('role-description');
+
+            if (role === 'guest') {
+                roleBadge.innerText = 'Tamu';
+                roleBadge.className = 'px-2 py-0.5 rounded-full font-bold bg-slate-800 text-slate-300 border border-slate-700';
+                roleDesc.innerText = 'Akses publik standar tanpa login.';
+            } else if (role === 'user') {
+                roleBadge.innerText = 'User Biasa';
+                roleBadge.className = 'px-2 py-0.5 rounded-full font-bold bg-blue-900/60 text-blue-300 border border-blue-500/40';
+                roleDesc.innerText = 'Akses akun pelapor barang.';
+            } else if (role === 'admin') {
+                roleBadge.innerText = 'Admin';
+                roleBadge.className = 'px-2 py-0.5 rounded-full font-bold bg-purple-900/60 text-purple-300 border border-purple-500/40';
+                roleDesc.innerText = 'Akses penuh manajemen sekolah.';
+            }
+
+            const navItems = navStructure[role];
+            let html = '';
+
+            navItems.forEach(item => {
+                if (item.isLogout) {
+                    html += `
+                        <button onclick="handleLogout()" class="w-full flex items-center space-x-3 px-4 py-3 rounded-xl font-semibold text-xs text-red-400 hover:bg-red-500/10 transition-all mt-4 border border-red-500/20">
+                            <i class="fa-solid ${item.icon} w-5"></i>
+                            <span>${item.label}</span>
+                        </button>
+                    `;
+                } else {
+                    const isActive = state.activeTab === item.id;
+                    const unreadCount = state.notifications.filter(n => !n.read && (!state.currentUser || n.user === state.currentUser.username)).length;
+
+                    html += `
+                        <button onclick="navigateTo('${item.id}')" id="nav-btn-${item.id}" class="w-full flex items-center justify-between px-4 py-3 rounded-xl font-semibold text-xs transition-all ${isActive ? 'bg-blue-600 text-white shadow-lg shadow-blue-600/30' : 'text-slate-300 hover:bg-slate-800/60'}">
+                            <div class="flex items-center space-x-3">
+                                <i class="fa-solid ${item.icon} w-5"></i>
+                                <span>${item.label}</span>
+                            </div>
+                            ${item.badge && unreadCount > 0 ? `<span class="bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-black">${unreadCount}</span>` : ''}
+                        </button>
+                    `;
+                }
+            });
+
+            container.innerHTML = html;
+        }
+
+        function navigateTo(tabId) {
+            if (tabId === 'logout') {
+                handleLogout();
+                return;
+            }
+
+            state.activeTab = tabId;
+            renderNavigation();
+
+            // Hide all tab views
+            document.querySelectorAll('.tab-view').forEach(view => view.classList.add('hidden'));
+
+            // Show selected view
+            const targetView = document.getElementById(`view-${tabId}`);
+            if (targetView) {
+                targetView.classList.remove('hidden');
+            }
+
+            // Update page header info
+            updatePageHeading(tabId);
+
+            // Execute view-specific refreshers
+            if (tabId === 'beranda') renderBerandaView();
+            if (tabId === 'cari') applyItemFilters();
+            if (tabId === 'user-dashboard') renderUserDashboard();
+            if (tabId === 'user-laporan') renderUserLaporan();
+            if (tabId === 'user-notifikasi') renderUserNotifikasi();
+            if (tabId === 'user-profil') populateUserProfileForm();
+            if (tabId === 'admin-dashboard') renderAdminDashboard();
+            if (tabId === 'admin-barang') renderAdminItemsTable();
+            if (tabId === 'admin-barcode') renderAdminBarcodesGrid();
+            if (tabId === 'admin-pengguna') renderAdminUsersTable();
+            if (tabId === 'admin-pengaturan') renderAdminPengaturanView();
+
+            // Auto close mobile drawer
+            const navContainer = document.getElementById('nav-container');
+            if (window.innerWidth < 768 && !navContainer.classList.contains('hidden')) {
+                toggleMobileNav();
+            }
+        }
+
+        function updatePageHeading(tabId) {
+            const titleElem = document.getElementById('page-heading-title');
+            const subElem = document.getElementById('page-heading-sub');
+
+            const titles = {
+                'beranda': { title: 'Beranda Utama', sub: 'Platform pencocokan pintar barang hilang dan barang temuan di sekitar Anda.' },
+                'cari': { title: 'Cari & Match Barang', sub: 'Filter barang berdasarkan nama, lokasi, tanggal, dan AI vision.' },
+                'temukan': { title: 'Temukan & Scan Barcode', sub: 'Petunjuk scan barcode lokasi terdekat untuk melaporkan barang temuan.' },
+                'masuk': { title: 'Masuk / Daftar Akun', sub: 'Akses akun Anda untuk mengelola laporan dan notifikasi.' },
+                'user-dashboard': { title: 'Dashboard Saya', sub: 'Ringkasan laporan dan aktivitas penemuan barang Anda.' },
+                'user-laporan': { title: 'Laporan Saya', sub: 'Pantau status perkembangan barang hilang & temuan yang Anda laporkan.' },
+                'user-notifikasi': { title: 'Notifikasi AI', sub: 'Pemberitahuan otomatis jika ada barang yang cocok dengan laporan Anda.' },
+                'user-profil': { title: 'Profil Saya', sub: 'Kelola informasi diri dan kontak WhatsApp aktif.' },
+                'admin-dashboard': { title: 'Dashboard Administrator', sub: 'Statistik eksekutif seluruh aktivitas platform Ketemu.in.' },
+                'admin-barang': { title: 'Kelola Seluruh Barang', sub: 'Verifikasi, perbarui status, atau hapus laporan barang.' },
+                'admin-barcode': { title: 'Kelola Barcode Lokasi', sub: 'Generate, unduh, dan cetak stiker barcode lokasi gedung.' },
+                'admin-pengguna': { title: 'Kelola Akun Pengguna', sub: 'Daftar pengguna terdaftar dan manajemen hak akses admin.' },
+                'admin-pengaturan': { title: 'Pengaturan Sistem', sub: 'Kelola kategori barang, aturan lokasi, dan kebijakan laporan.' }
+            };
+
+            const info = titles[tabId] || { title: 'Ketemu.in', sub: 'Smart Matching, Happy Finding' };
+            titleElem.innerHTML = `<span>${info.title}</span>`;
+            subElem.innerText = info.sub;
+        }
+
+        function updateTopUserPill() {
+            const pillContainer = document.getElementById('top-user-pill');
+            if (!state.currentUser) {
+                pillContainer.innerHTML = `
+                    <button onclick="navigateTo('masuk')" class="bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold px-4 py-2 rounded-xl transition-all shadow-lg shadow-blue-600/30 flex items-center space-x-2">
+                        <i class="fa-solid fa-right-to-bracket"></i>
+                        <span>Masuk / Daftar</span>
+                    </button>
+                `;
+            } else {
+                pillContainer.innerHTML = `
+                    <div class="flex items-center space-x-3 bg-slate-900/80 px-3 py-1.5 rounded-2xl border border-slate-800">
+                        <div class="w-8 h-8 rounded-xl bg-blue-600 text-white font-bold text-xs flex items-center justify-center">
+                            ${state.currentUser.fullname.charAt(0).toUpperCase()}
+                        </div>
+                        <div class="text-left hidden sm:block">
+                            <p class="text-xs font-bold text-white leading-tight">${state.currentUser.fullname}</p>
+                            <p class="text-[10px] text-blue-400 capitalize">${state.currentUser.role}</p>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+
+        function toggleMobileNav() {
+            const nav = document.getElementById('nav-container');
+            const icon = document.getElementById('mobile-menu-icon');
+            nav.classList.toggle('hidden');
+            if (nav.classList.contains('hidden')) {
+                icon.className = 'fa-solid fa-bars';
+            } else {
+                icon.className = 'fa-solid fa-xmark';
+            }
+        }
+
+        // Populators & View Renderers
+        function populateDropdownOptions() {
+            const catSelects = [document.getElementById('filter-kategori'), document.getElementById('form-item-category')];
+            const locSelects = [document.getElementById('filter-lokasi'), document.getElementById('form-item-location')];
+
+            catSelects.forEach(select => {
+                if (!select) return;
+                const isFilter = select.id.startsWith('filter');
+                select.innerHTML = isFilter ? '<option value="">Semua Kategori</option>' : '<option value="">Pilih Kategori...</option>';
+                state.categories.forEach(cat => {
+                    select.innerHTML += `<option value="${cat}">${cat}</option>`;
+                });
+            });
+
+            locSelects.forEach(select => {
+                if (!select) return;
+                const isFilter = select.id.startsWith('filter');
+                select.innerHTML = isFilter ? '<option value="">Semua Lokasi</option>' : '<option value="">Pilih Lokasi Gedung...</option>';
+                state.locations.forEach(loc => {
+                    select.innerHTML += `<option value="${loc.name}">${loc.name}</option>`;
+                });
+            });
+        }
+
+        function renderBerandaView() {
+            const total = state.items.length;
+            const hilang = state.items.filter(i => i.type === 'Hilang' && i.status !== 'Dikembalikan').length;
+            const kembali = state.items.filter(i => i.status === 'Dikembalikan').length;
+            const lokasi = state.locations.length;
+
+            document.getElementById('stat-public-total').innerText = total;
+            document.getElementById('stat-public-hilang').innerText = hilang;
+            document.getElementById('stat-public-kembali').innerText = kembali;
+            document.getElementById('stat-public-lokasi').innerText = lokasi;
+
+            const grid = document.getElementById('beranda-latest-items-grid');
+            const latest = [...state.items].reverse().slice(0, 3);
+
+            if (latest.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-8 text-xs text-slate-400">Belum ada laporan barang.</div>`;
+                return;
+            }
+
+            grid.innerHTML = latest.map(item => createItemCardHTML(item)).join('');
+        }
+
+        function createItemCardHTML(item) {
+            const isHilang = item.type === 'Hilang';
+            const statusColor = item.status === 'Dikembalikan' ? 'bg-emerald-500/20 text-emerald-400 border-emerald-500/30' : (isHilang ? 'bg-amber-500/20 text-amber-400 border-amber-500/30' : 'bg-blue-500/20 text-blue-400 border-blue-500/30');
+
+            return `
+                <div class="glass-card rounded-2xl overflow-hidden border border-slate-800 hover:border-slate-700 transition-all flex flex-col justify-between space-y-3">
+                    <div>
+                        <div class="relative h-40 bg-slate-900 overflow-hidden flex items-center justify-center">
+                            <img src="${item.photo || 'https://images.unsplash.com/photo-1584438784894-089d6a62b8fa?auto=format&fit=crop&w=500&q=80'}" alt="${item.name}" class="w-full h-full object-cover">
+                            <span class="absolute top-3 left-3 px-2.5 py-1 rounded-full text-[10px] font-bold border backdrop-blur-md uppercase ${statusColor}">
+                                ${item.status}
+                            </span>
+                            <span class="absolute top-3 right-3 px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-900/80 text-slate-300 border border-slate-700">
+                                ${item.category}
+                            </span>
+                        </div>
+                        <div class="p-4 space-y-2">
+                            <h4 class="font-bold text-base text-white line-clamp-1">${item.name}</h4>
+                            <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">${item.desc}</p>
+                            <div class="flex items-center space-x-2 text-[11px] text-slate-400 pt-1">
+                                <i class="fa-solid fa-location-dot text-blue-400"></i>
+                                <span class="truncate">${item.location}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-4 pt-0">
+                        <button onclick="openItemDetailModal('${item.id}')" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2 rounded-xl text-xs transition-all border border-slate-700/60">
+                            Lihat Detail & Hubungi
+                        </button>
+                    </div>
+                </div>
+            `;
+        }
+
+        function applyItemFilters() {
+            const kw = document.getElementById('search-keyword').value.toLowerCase();
+            const cat = document.getElementById('filter-kategori').value;
+            const loc = document.getElementById('filter-lokasi').value;
+            const status = document.getElementById('filter-status').value;
+
+            const grid = document.getElementById('cari-items-grid');
+            const filtered = state.items.filter(i => {
+                const matchKw = i.name.toLowerCase().includes(kw) || i.desc.toLowerCase().includes(kw);
+                const matchCat = !cat || i.category === cat;
+                const matchLoc = !loc || i.location === loc;
+                const matchStatus = !status || (status === 'Hilang' ? i.type === 'Hilang' : (status === 'Ditemukan' ? i.type === 'Ditemukan' : i.status === 'Dikembalikan'));
+                return matchKw && matchCat && matchLoc && matchStatus;
+            });
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full glass-card p-8 text-center text-xs text-slate-400 rounded-2xl">Tidak ada barang yang cocok dengan kriteria pencarian Anda.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => createItemCardHTML(item)).join('');
+        }
+
+        // AI Vision & Smart Match Trigger (Simulated with local smart analyzer)
+        function triggerAiSmartMatch() {
+            document.getElementById('ai-smart-file-input').click();
+        }
+
+        function handleAiSearchFile(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            showCustomModal('Menganalisis Foto AI...', 'Sistem sedang memindai fitur visual barang dan melakukan pencocokan ke seluruh database...');
+
+            setTimeout(() => {
+                const randomMatch = state.items[Math.floor(Math.random() * state.items.length)];
+                closeCustomModal();
+                if (randomMatch) {
+                    openItemDetailModal(randomMatch.id);
+                    showCustomModal('Pencocokan AI Berhasil!', `Tingkat Kemiripan 89%: Ditemukan barang serupa "${randomMatch.name}"!`);
+                }
+            }, 1800);
+        }
+
+        // Form Modals (Lapor Hilang / Temuan)
+        function openLaporFormModal(type = 'Hilang', defaultLocation = '') {
+            if (!state.currentUser) {
+                showCustomModal('Perlu Login', 'Silakan masuk atau buat akun terlebih dahulu untuk membuat laporan.');
+                navigateTo('masuk');
+                return;
+            }
+
+            document.getElementById('form-item-type').value = type;
+            document.getElementById('lapor-modal-title').innerText = type === 'Hilang' ? 'Form Lapor Barang Hilang' : 'Form Lapor Barang Temuan';
+            document.getElementById('form-item-date').value = new Date().toISOString().split('T')[0];
+
+            if (defaultLocation) {
+                document.getElementById('form-item-location').value = defaultLocation;
+            }
+
+            document.getElementById('modal-lapor-form').classList.remove('hidden');
+        }
+
+        function closeLaporFormModal() {
+            document.getElementById('modal-lapor-form').classList.add('hidden');
+        }
+
+        async function handleSubmitReportForm(e) {
+            e.preventDefault();
+            const form = e.target;
+            const btn = form.querySelector('button[type="submit"]');
+            let photo = 'https://images.unsplash.com/photo-1544816155-12df9643f363?auto=format&fit=crop&w=500&q=80';
+            const file = document.getElementById('form-item-photo').files[0];
+            if (file) {
+                const label = btn ? btn.innerText : '';
+                if (btn) { btn.disabled = true; btn.innerText = 'Mengunggah foto...'; }
+                try { photo = await uploadPhoto(file); }
+                catch (err) {
+                    if (btn) { btn.disabled = false; btn.innerText = label; }
+                    return showCustomModal('Foto Gagal Diunggah', err.message);
+                }
+                if (btn) { btn.disabled = false; btn.innerText = label; }
+            }
+            const type = document.getElementById('form-item-type').value;
+            const name = document.getElementById('form-item-name').value;
+            const category = document.getElementById('form-item-category').value;
+            const location = document.getElementById('form-item-location').value;
+            const date = document.getElementById('form-item-date').value;
+            const desc = document.getElementById('form-item-desc').value;
+
+            const newItem = {
+                id: `ITM-${Date.now().toString().slice(-6)}`,
+                name: name,
+                category: category,
+                location: location,
+                date: date,
+                desc: desc,
+                type: type,
+                status: type === 'Hilang' ? 'Belum Ditemukan' : 'Ditemukan',
+                reporter: state.currentUser.fullname,
+                phone: state.currentUser.phone,
+                photo: photo
+            };
+
+            newItem.owner = state.currentUser.username;
+            state.items.unshift(newItem);
+            bg('save', { table: 'items', row: newItem });
+
+            // Add notification alert
+            state.notifications.unshift({
+                id: `NFT-${Date.now()}`,
+                user: state.currentUser.username,
+                text: `Laporan barang ${type} "${name}" berhasil dibuat dan ditayangkan.`,
+                date: 'Baru saja',
+                read: false
+            });
+
+            bg('save', { table: 'notifications', row: state.notifications[0] });
+            closeLaporFormModal();
+            form.reset();
+
+            showCustomModal('Laporan Berhasil!', `Laporan barang ${type} Anda telah tersimpan. Pengguna lain dan AI dapat menemukan laporan ini.`);
+
+            if (state.currentUser.role === 'admin') {
+                navigateTo('admin-barang');
+            } else {
+                navigateTo('user-laporan');
+            }
+        }
+
+        // Barcode Scanner Modal Simulation
+        function openBarcodeScannerModal() {
+            const container = document.getElementById('scanner-location-buttons');
+            container.innerHTML = state.locations.map(loc => `
+                <button onclick="selectScannedBarcode('${loc.name}')" class="w-full bg-slate-800 hover:bg-slate-700 p-3 rounded-xl border border-slate-700 text-left flex items-center justify-between transition-all">
+                    <div>
+                        <p class="font-bold text-xs text-white">${loc.name}</p>
+                        <p class="text-[10px] text-slate-400">${loc.desc}</p>
+                    </div>
+                    <i class="fa-solid fa-qrcode text-emerald-400 text-lg"></i>
+                </button>
+            `).join('');
+
+            document.getElementById('modal-barcode-scanner').classList.remove('hidden');
+        }
+
+        function closeBarcodeScannerModal() {
+            document.getElementById('modal-barcode-scanner').classList.add('hidden');
+        }
+
+        function selectScannedBarcode(locName) {
+            closeBarcodeScannerModal();
+            openLaporFormModal('Ditemukan', locName);
+            showCustomModal('Barcode Terpindai!', `Lokasi penemuan berhasil terdeteksi: "${locName}"`);
+        }
+
+        // Item Detail Modal
+        function openItemDetailModal(itemId) {
+            const item = state.items.find(i => i.id === itemId);
+            if (!item) return;
+
+            document.getElementById('detail-item-title').innerText = item.name;
+            document.getElementById('detail-item-cat').innerText = `Kategori: ${item.category}`;
+            document.getElementById('detail-item-loc').innerText = item.location;
+            document.getElementById('detail-item-date').innerText = item.date;
+            document.getElementById('detail-item-desc').innerText = item.desc;
+            document.getElementById('detail-item-contact').innerText = `${item.reporter} (${item.phone})`;
+
+            const typeBadge = document.getElementById('detail-type-badge');
+            if (item.type === 'Hilang') {
+                typeBadge.innerText = 'BARANG HILANG';
+                typeBadge.className = 'px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30';
+            } else {
+                typeBadge.innerText = 'BARANG DITEMUKAN';
+                typeBadge.className = 'px-3 py-1 rounded-full text-[10px] font-extrabold uppercase bg-blue-500/20 text-blue-400 border border-blue-500/30';
+            }
+
+            const imgBox = document.getElementById('detail-image-box');
+            imgBox.innerHTML = `<img src="${item.photo}" class="w-full h-full object-cover">`;
+
+            const waBtn = document.getElementById('detail-wa-btn');
+            const cleanPhone = item.phone.replace(/[^0-9]/g, '');
+            waBtn.href = `https://wa.me/${cleanPhone}?text=Halo%20${encodeURIComponent(item.reporter)},%20saya%20menghubungi%20terkait%20laporan%20Ketemu.in:%20${encodeURIComponent(item.name)}`;
+
+            document.getElementById('modal-item-detail').classList.remove('hidden');
+        }
+
+        function closeItemDetailModal() {
+            document.getElementById('modal-item-detail').classList.add('hidden');
+        }
+
+        // Custom Notification Alert Helper
+        function showCustomModal(title, msg) {
+            document.getElementById('modal-title').innerText = title;
+            document.getElementById('modal-msg').innerText = msg;
+            document.getElementById('custom-modal').classList.remove('hidden');
+        }
+
+        function closeCustomModal() {
+            document.getElementById('custom-modal').classList.add('hidden');
+        }
+
+        // AUTHENTICATION LOGIC
+        function switchAuthTab(tab) {
+            const loginBox = document.getElementById('auth-login-box');
+            const registerBox = document.getElementById('auth-register-box');
+            const loginBtn = document.getElementById('auth-tab-login-btn');
+            const registerBtn = document.getElementById('auth-tab-register-btn');
+
+            if (tab === 'login') {
+                loginBox.classList.remove('hidden');
+                registerBox.classList.add('hidden');
+                loginBtn.className = 'flex-1 py-2.5 text-xs font-bold rounded-xl transition-all bg-blue-600 text-white shadow-lg';
+                registerBtn.className = 'flex-1 py-2.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white';
+            } else {
+                loginBox.classList.add('hidden');
+                registerBox.classList.remove('hidden');
+                loginBtn.className = 'flex-1 py-2.5 text-xs font-bold rounded-xl transition-all text-slate-400 hover:text-white';
+                registerBtn.className = 'flex-1 py-2.5 text-xs font-bold rounded-xl transition-all bg-emerald-600 text-white shadow-lg';
+            }
+        }
+
+        function fillDemoLogin(role) {
+            if (role === 'user') {
+                document.getElementById('login-username').value = 'user';
+                document.getElementById('login-password').value = 'user123';
+            } else {
+                document.getElementById('login-username').value = 'admin';
+                document.getElementById('login-password').value = 'admin123';
+            }
+        }
+
+        async function handleAuthLogin(e) {
+            e.preventDefault();
+            let r;
+            try {
+                r = await api('login', {
+                    username: document.getElementById('login-username').value,
+                    password: document.getElementById('login-password').value
+                });
+            } catch (err) { r = { ok: false, error: 'Tidak dapat terhubung ke server.' }; }
+            if (!r.ok) return showCustomModal('Login Gagal', r.error);
+            startSession(r.user);
+        }
+
+        async function handleAuthRegister(e) {
+            e.preventDefault();
+            let r;
+            try {
+                r = await api('register', {
+                    fullname: document.getElementById('reg-fullname').value,
+                    username: document.getElementById('reg-username').value,
+                    phone: document.getElementById('reg-phone').value,
+                    password: document.getElementById('reg-password').value
+                });
+            } catch (err) { r = { ok: false, error: 'Tidak dapat terhubung ke server.' }; }
+            if (!r.ok) return showCustomModal('Pendaftaran Gagal', r.error);
+            await startSession(r.user);
+        }
+
+        function handleLogout() {
+            state.currentUser = null;
+            localStorage.removeItem('ketemu_user');
+            state.notifications = []; state.users = [];
+            updateTopUserPill();
+            renderNavigation();
+            navigateTo('beranda');
+            showCustomModal('Logout Berhasil', 'Anda telah keluar dari akun.');
+        }
+
+        // USER BIASA MENU FUNCTIONS
+        function renderUserDashboard() {
+            if (!state.currentUser) return;
+
+            const myItems = state.items.filter(i => i.reporter.toLowerCase() === state.currentUser.fullname.toLowerCase() || i.reporter === state.currentUser.username);
+            const total = myItems.length;
+            const proses = myItems.filter(i => i.status !== 'Dikembalikan').length;
+            const selesai = myItems.filter(i => i.status === 'Dikembalikan').length;
+
+            document.getElementById('user-stat-total').innerText = total;
+            document.getElementById('user-stat-proses').innerText = proses;
+            document.getElementById('user-stat-selesai').innerText = selesai;
+
+            const recentContainer = document.getElementById('user-recent-reports-container');
+            if (myItems.length === 0) {
+                recentContainer.innerHTML = `<div class="text-center py-6 text-xs text-slate-400">Anda belum pernah membuat laporan.</div>`;
+                return;
+            }
+
+            recentContainer.innerHTML = myItems.slice(0, 3).map(i => `
+                <div class="flex items-center justify-between p-3 rounded-2xl bg-slate-900/60 border border-slate-800">
+                    <div class="flex items-center space-x-3">
+                        <img src="${i.photo}" class="w-10 h-10 rounded-xl object-cover">
+                        <div>
+                            <h4 class="font-bold text-xs text-white">${i.name}</h4>
+                            <p class="text-[10px] text-slate-400">${i.type} • ${i.date}</p>
+                        </div>
+                    </div>
+                    <span class="text-[10px] font-bold px-2.5 py-1 rounded-full ${i.status === 'Dikembalikan' ? 'bg-emerald-500/20 text-emerald-400' : 'bg-blue-500/20 text-blue-400'}">
+                        ${i.status}
+                    </span>
+                </div>
+            `).join('');
+        }
+
+        function renderUserLaporan() {
+            if (!state.currentUser) return;
+            filterMyReports(state.myReportFilter);
+        }
+
+        function filterMyReports(type) {
+            state.myReportFilter = type;
+            const myItems = state.items.filter(i => i.reporter.toLowerCase() === state.currentUser.fullname.toLowerCase() || i.reporter === state.currentUser.username);
+            
+            const filtered = myItems.filter(i => {
+                if (type === 'semua') return true;
+                return i.type === type;
+            });
+
+            const grid = document.getElementById('my-reports-list-grid');
+
+            // Button styling updates
+            document.getElementById('my-report-filter-semua').className = type === 'semua' ? 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white' : 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300';
+            document.getElementById('my-report-filter-hilang').className = type === 'Hilang' ? 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white' : 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300';
+            document.getElementById('my-report-filter-temuan').className = type === 'Ditemukan' ? 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-blue-600 text-white' : 'px-4 py-2 rounded-xl text-xs font-bold transition-all bg-slate-800 text-slate-300';
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full glass-card p-8 text-center text-xs text-slate-400 rounded-2xl">Belum ada laporan untuk kategori ini.</div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(item => createItemCardHTML(item)).join('');
+        }
+
+        function renderUserNotifikasi() {
+            const list = document.getElementById('user-notifications-list');
+            const myNotifs = state.notifications.filter(n => !state.currentUser || n.user === state.currentUser.username);
+
+            if (myNotifs.length === 0) {
+                list.innerHTML = `<div class="text-center py-6 text-xs text-slate-400">Belum ada notifikasi baru.</div>`;
+                return;
+            }
+
+            list.innerHTML = myNotifs.map(n => `
+                <div class="p-4 rounded-2xl ${n.read ? 'bg-slate-900/40 border border-slate-800/60' : 'bg-blue-900/20 border border-blue-500/30'} flex items-start justify-between space-x-3">
+                    <div class="space-y-1">
+                        <p class="text-xs text-slate-200 leading-relaxed">${n.text}</p>
+                        <span class="text-[10px] text-slate-400 block">${n.date}</span>
+                    </div>
+                    ${!n.read ? `<span class="w-2 h-2 rounded-full bg-blue-500 shrink-0 mt-1"></span>` : ''}
+                </div>
+            `).join('');
+        }
+
+        function markNotificationsAsRead() {
+            state.notifications.forEach(n => n.read = true);
+            bg('markRead');
+            renderUserNotifikasi();
+            renderNavigation();
+            showCustomModal('Notifikasi', 'Semua notifikasi ditandai telah dibaca.');
+        }
+
+        function populateUserProfileForm() {
+            if (!state.currentUser) return;
+
+            document.getElementById('profile-avatar-initial').innerText = state.currentUser.fullname.charAt(0).toUpperCase();
+            document.getElementById('profile-fullname-display').innerText = state.currentUser.fullname;
+            document.getElementById('profile-role-badge').innerText = `Peran: ${state.currentUser.role === 'admin' ? 'Administrator Sekolah' : 'User Biasa / Pelapor'}`;
+
+            document.getElementById('profile-fullname-input').value = state.currentUser.fullname;
+            document.getElementById('profile-username-input').value = state.currentUser.username;
+            document.getElementById('profile-phone-input').value = state.currentUser.phone || '';
+        }
+
+        function handleSaveProfile(e) {
+            e.preventDefault();
+            if (!state.currentUser) return;
+
+            state.currentUser.fullname = document.getElementById('profile-fullname-input').value;
+            state.currentUser.phone = document.getElementById('profile-phone-input').value;
+
+            localStorage.setItem('ketemu_user', JSON.stringify(state.currentUser));
+            bg('save', { table: 'users', row: { username: state.currentUser.username, fullname: state.currentUser.fullname, phone: state.currentUser.phone } });
+            updateTopUserPill();
+            populateUserProfileForm();
+            showCustomModal('Profil Diperbarui', 'Informasi akun Anda berhasil disimpan.');
+        }
+
+        // KHUSUS ADMIN MENU FUNCTIONS
+        function renderAdminDashboard() {
+            const total = state.items.length;
+            const unfound = state.items.filter(i => i.status === 'Belum Ditemukan').length;
+            const returned = state.items.filter(i => i.status === 'Dikembalikan').length;
+            const pending = state.items.filter(i => i.status === 'Ditemukan').length;
+
+            document.getElementById('adm-stat-total').innerText = total;
+            document.getElementById('adm-stat-unfound').innerText = unfound;
+            document.getElementById('adm-stat-returned').innerText = returned;
+            document.getElementById('adm-stat-pending').innerText = pending;
+        }
+
+        function renderAdminItemsTable() {
+            const tbody = document.getElementById('admin-items-table-body');
+            const search = document.getElementById('admin-search-item').value.toLowerCase();
+
+            const filtered = state.items.filter(i => i.name.toLowerCase().includes(search) || i.reporter.toLowerCase().includes(search));
+
+            if (filtered.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="6" class="p-6 text-center text-slate-400">Tidak ada data laporan barang.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = filtered.map(i => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="p-3">
+                        <div class="flex items-center space-x-3">
+                            <img src="${i.photo}" class="w-9 h-9 rounded-xl object-cover shrink-0">
+                            <div>
+                                <p class="font-bold text-white text-xs">${i.name}</p>
+                                <p class="text-[10px] text-slate-400">ID: ${i.id}</p>
+                            </div>
+                        </div>
+                    </td>
+                    <td class="p-3">
+                        <span class="px-2 py-0.5 rounded text-[10px] font-bold ${i.type === 'Hilang' ? 'bg-amber-500/10 text-amber-400' : 'bg-blue-500/10 text-blue-400'}">
+                            ${i.type}
+                        </span>
+                        <p class="text-[10px] text-slate-400 mt-0.5">${i.category}</p>
+                    </td>
+                    <td class="p-3 text-slate-300 text-[11px]">${i.location}</td>
+                    <td class="p-3 text-slate-300 text-[11px]">${i.reporter}</td>
+                    <td class="p-3">
+                        <select onchange="updateItemStatus('${i.id}', this.value)" class="glass-input px-2 py-1 rounded-lg text-[10px] font-bold">
+                            <option value="Belum Ditemukan" ${i.status === 'Belum Ditemukan' ? 'selected' : ''}>Belum Ditemukan</option>
+                            <option value="Ditemukan" ${i.status === 'Ditemukan' ? 'selected' : ''}>Ditemukan</option>
+                            <option value="Dikembalikan" ${i.status === 'Dikembalikan' ? 'selected' : ''}>Dikembalikan</option>
+                        </select>
+                    </td>
+                    <td class="p-3 text-right">
+                        <button onclick="deleteItemAdmin('${i.id}')" class="text-red-400 hover:text-red-300 p-1">
+                            <i class="fa-solid fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function updateItemStatus(id, newStatus) {
+            const item = state.items.find(i => i.id === id);
+            if (item) {
+                item.status = newStatus;
+                bg('save', { table: 'items', row: { id: item.id, status: newStatus } });
+                showCustomModal('Status Diperbarui', `Status barang "${item.name}" diubah menjadi: ${newStatus}`);
+                renderAdminDashboard();
+            }
+        }
+
+        function deleteItemAdmin(id) {
+            state.items = state.items.filter(i => i.id !== id);
+            bg('remove', { table: 'items', key: id });
+            renderAdminItemsTable();
+            renderAdminDashboard();
+            showCustomModal('Barang Dihapus', 'Laporan barang tidak valid telah dihapus.');
+        }
+
+        // KELOLA BARCODE LOKASI ADMIN
+        function renderAdminBarcodesGrid() {
+            const grid = document.getElementById('admin-barcodes-grid');
+
+            grid.innerHTML = state.locations.map(loc => `
+                <div class="glass-card p-5 rounded-2xl border border-slate-800 space-y-4 flex flex-col justify-between">
+                    <div class="space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded">ID: ${loc.id}</span>
+                            <button onclick="deleteLocationAdmin('${loc.id}')" class="text-red-400 hover:text-red-300 text-xs">
+                                <i class="fa-solid fa-trash"></i>
+                            </button>
+                        </div>
+                        <h4 class="font-bold text-base text-white">${loc.name}</h4>
+                        <p class="text-xs text-slate-400">${loc.desc}</p>
+                    </div>
+
+                    <div class="bg-white p-3 rounded-xl flex justify-center items-center" id="qr-target-${loc.id}">
+                        <!-- QRCode js target -->
+                    </div>
+
+                    <div class="flex gap-2">
+                        <button onclick="printLocationBarcode('${loc.id}')" class="flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 rounded-xl text-xs transition-all shadow-lg shadow-blue-600/20 flex items-center justify-center space-x-1">
+                            <i class="fa-solid fa-print"></i>
+                            <span>Cetak Barcode</span>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+
+            // Generate QRCode Elements
+            setTimeout(() => {
+                state.locations.forEach(loc => {
+                    const elem = document.getElementById(`qr-target-${loc.id}`);
+                    if (elem) {
+                        elem.innerHTML = '';
+                        new QRCode(elem, {
+                            text: scanUrl(loc),
+                            width: 120,
+                            height: 120
+                        });
+                    }
+                });
+            }, 100);
+        }
+
+        function handleAdminAddLocation(e) {
+            e.preventDefault();
+            const name = document.getElementById('new-loc-name').value;
+            const desc = document.getElementById('new-loc-desc').value;
+
+            const newLoc = {
+                id: `LOC-${Date.now().toString().slice(-5)}`,
+                name: name,
+                desc: desc
+            };
+
+            state.locations.push(newLoc);
+            bg('save', { table: 'locations', row: newLoc });
+            populateDropdownOptions();
+            renderAdminBarcodesGrid();
+            e.target.reset();
+
+            showCustomModal('Barcode Lokasi Dibuat', `Lokasi "${name}" berhasil ditambahkan ke sistem.`);
+        }
+
+        function deleteLocationAdmin(id) {
+            state.locations = state.locations.filter(l => l.id !== id);
+            bg('remove', { table: 'locations', key: id });
+            populateDropdownOptions();
+            renderAdminBarcodesGrid();
+            showCustomModal('Lokasi Dihapus', 'Lokasi barcode berhasil dihapus.');
+        }
+
+        function printLocationBarcode(locId) {
+            const loc = state.locations.find(l => l.id === locId);
+            if (!loc) return;
+
+            document.getElementById('print-loc-name').innerText = loc.name;
+            document.getElementById('print-loc-desc').innerText = loc.desc;
+
+            const target = document.getElementById('print-qr-target');
+            target.innerHTML = '';
+            new QRCode(target, {
+                text: scanUrl(loc),
+                width: 200,
+                height: 200
+            });
+
+            document.getElementById('print-area').classList.remove('hidden');
+            window.print();
+            document.getElementById('print-area').classList.add('hidden');
+        }
+
+        // KELOLA PENGGUNA ADMIN
+        function renderAdminUsersTable() {
+            const tbody = document.getElementById('admin-users-table-body');
+            tbody.innerHTML = state.users.map(u => `
+                <tr class="hover:bg-slate-800/40">
+                    <td class="p-3 font-bold text-white text-xs">${u.fullname}</td>
+                    <td class="p-3 text-slate-300 text-xs">${u.username}</td>
+                    <td class="p-3 text-slate-300 text-xs">${u.phone || '-'}</td>
+                    <td class="p-3">
+                        <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold ${u.role === 'admin' ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'bg-blue-500/20 text-blue-300 border border-blue-500/30'}">
+                            ${u.role.toUpperCase()}
+                        </span>
+                    </td>
+                    <td class="p-3 text-right">
+                        <button onclick="toggleUserRoleAdmin('${u.username}')" class="text-xs text-blue-400 hover:underline">
+                            ${u.role === 'admin' ? 'Jadikan User' : 'Jadikan Admin'}
+                        </button>
+                        ${state.currentUser && u.username === state.currentUser.username
+                            ? '<span class="text-[10px] text-slate-500 ml-3">(akun Anda)</span>'
+                            : `<button onclick="deleteUserAdmin('${u.username}')" class="text-xs text-red-400 hover:underline ml-3">Hapus</button>`}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function deleteUserAdmin(username) {
+            if (state.currentUser && username === state.currentUser.username) {
+                showCustomModal('Tidak Bisa Dihapus', 'Anda tidak bisa menghapus akun yang sedang dipakai.');
+                return;
+            }
+            if (!confirm(`Hapus pengguna "${username}"? Akunnya tidak bisa login lagi. Laporan yang sudah dibuat tetap ada.`)) return;
+            state.users = state.users.filter(u => u.username !== username);
+            bg('remove', { table: 'users', key: username });
+            renderAdminUsersTable();
+            showCustomModal('Pengguna Dihapus', `Akun ${username} telah dihapus.`);
+        }
+
+        function toggleUserRoleAdmin(username) {
+            const usr = state.users.find(u => u.username === username);
+            if (usr) {
+                usr.role = usr.role === 'admin' ? 'user' : 'admin';
+                bg('save', { table: 'users', row: { username: usr.username, role: usr.role } });
+                renderAdminUsersTable();
+                showCustomModal('Peran Diperbarui', `Hak akses pengguna ${usr.username} telah diubah.`);
+            }
+        }
+
+        // PENGATURAN ADMIN
+        function renderAdminPengaturanView() {
+            const container = document.getElementById('admin-categories-tags');
+            container.innerHTML = state.categories.map(cat => `
+                <span class="bg-slate-800 text-slate-200 border border-slate-700 px-3 py-1 rounded-xl text-xs font-semibold flex items-center space-x-2">
+                    <span>${cat}</span>
+                    <button onclick="deleteCategoryAdmin('${cat}')" class="text-red-400 hover:text-red-300">
+                        <i class="fa-solid fa-xmark text-xs"></i>
+                    </button>
+                </span>
+            `).join('');
+        }
+
+        function handleAdminAddCategory(e) {
+            e.preventDefault();
+            const val = document.getElementById('new-cat-input').value.trim();
+            if (val && !state.categories.includes(val)) {
+                state.categories.push(val);
+                bg('save', { table: 'categories', row: { name: val } });
+                populateDropdownOptions();
+                renderAdminPengaturanView();
+                document.getElementById('new-cat-input').value = '';
+            }
+        }
+
+        function deleteCategoryAdmin(cat) {
+            state.categories = state.categories.filter(c => c !== cat);
+            bg('remove', { table: 'categories', key: cat });
+            populateDropdownOptions();
+            renderAdminPengaturanView();
+        }
+    </script>
+</body>
+</html>
